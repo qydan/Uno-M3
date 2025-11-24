@@ -11,10 +11,8 @@ import java.awt.event.ActionListener;
  */
 public class UnoController implements ActionListener {
 
-    private UnoModel model;
-
-
-    private UnoView view;
+    private final UnoModel model;
+    private final UnoView view;
 
     public UnoController(UnoModel model, UnoView view) {
         this.model = model;
@@ -38,42 +36,34 @@ public class UnoController implements ActionListener {
             } else if (cmd.equals("NEXT")) {
                 model.nextPlayer();
 
-
             } else {
                 System.err.println("Unknown command: " + cmd);
             }
 
         } catch (IllegalStateException ex) {
-
             view.showInfo(ex.getMessage());
         }
     }
 
     private void handPlayCommand(String command) {
         int idx = Integer.parseInt(command.substring("PLAY:".length()));
-        UnoCard selectedCard = model.peekCardInHand(idx);
 
-        if (selectedCard == null) {
+        // Check validity via Model helper first
+        if (model.peekCardInHand(idx) == null) {
             view.showInfo("Invalid card.");
             return;
         }
 
-        // when wild ask for colour
-        if (selectedCard.isWild()) {
+        // Ask Model if this card is wild
+        if (model.isCardWild(idx)) {
             UnoColor chosen = view.promptForWildColor();
-
-            //Player cancelled color selection
             if (chosen == null || chosen == UnoColor.NONE) {
                 view.showInfo("Wild play cancelled.");
                 return;
             }
-
-            //Play the wild card
             model.playWild(idx, chosen);
         } else {
-            // Play just a normal card
             model.play(idx);
         }
-
     }
 }

@@ -78,14 +78,15 @@ public class UnoFrame extends JFrame implements UnoView {
     }
 
     @Override
-    public void handleUpdate(java.util.List<UnoCard> currentHand, String topCardText, String currentPlayerName, String info, boolean mustPressNext) {
+    public void handleUpdate(UnoEvent e) {
         // Update labels
-        labelTopCard.setText("Top: " + topCardText);
-        labelPlayer.setText("Turn: " + currentPlayerName + (mustPressNext ? " (press Next)" : ""));
-        labelInfo.setText(info);
+        labelTopCard.setText("Top: " + e.getTopCardText());
+        labelPlayer.setText("Turn: " + e.getCurrentPlayerName() + (e.isMustPressNext() ? " (press Next)" : ""));
+        labelInfo.setText(e.getInfo());
 
         // Refresh hand panel
         handPanel.removeAll();
+        List<UnoCard> currentHand = e.getHand();
         for (int i = 0; i < currentHand.size(); i++) {
             UnoCard c = currentHand.get(i);
             JButton b = new JButton(c.toText());
@@ -101,8 +102,8 @@ public class UnoFrame extends JFrame implements UnoView {
         handPanel.repaint();
 
         // Toggle button states
-        buttonDraw.setEnabled(!mustPressNext);
-        buttonNext.setEnabled(mustPressNext);
+        buttonDraw.setEnabled(!e.isMustPressNext());
+        buttonNext.setEnabled(e.isMustPressNext());
     }
 
     @Override

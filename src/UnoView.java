@@ -1,33 +1,50 @@
 import java.awt.Color;
-import java.util.List;
+
 /**
- * View interface for Uno; defines how the model communicates visual/game state updates to any UI.
- * @author Danilo Bukvic Ajan Balaganesh Aydan Eng Aws Ali
- * @version 1.0
+ * View interface for Uno.
+ * Defines how the model communicates visual/game state updates via UnoEvent.
+ *
+ * @author Ajan Balaganesh Danilo Bukvic Aydan Eng Aws Ali
+ * @version 2.0
  */
 public interface UnoView {
-    // Push state to the view directly
-    void handleUpdate(
-            List<UnoCard> currentHand,
-            String topCardText,
-            String currentPlayerName,
-            String info,
-            boolean mustPressNext
-    );
 
+    /**
+     * Handles a game state update event from the model.
+     * @param e The UnoEvent containing the current game state.
+     */
+    void handleUpdate(UnoEvent e);
+
+    /**
+     * Handles the end of the game.
+     * @param message The winning message.
+     */
     void handleEnd(String message);
-    
+
+    /**
+     * Prompts the user to select a color for a Wild card.
+     * @return The selected UnoColor.
+     */
     UnoColor promptForWildColor();
-    
+
+    /**
+     * Displays an informational message or error to the user.
+     * @param message The message to display.
+     */
     void showInfo(String message);
 
+    /**
+     * Maps an UnoColor enum to a Java AWT Color.
+     * @param c The UnoColor.
+     * @return The corresponding AWT Color.
+     */
     default Color mapCardColor(UnoColor c) {
         return switch (c) {
             case RED -> Color.RED;
             case GREEN -> Color.GREEN;
             case BLUE -> Color.BLUE;
             case YELLOW -> Color.YELLOW;
-            default -> Color.GRAY; // Our default color
+            default -> Color.GRAY;
         };
     }
 }
