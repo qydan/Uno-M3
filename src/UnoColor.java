@@ -1,7 +1,7 @@
 /**
  * Represents difference colors of a card
  * @author Ajan Balaganesh Danilo Bukvic Aydan Eng Aws Ali
- * @version 1.0
+ * @version 3.0
  */
 public enum UnoColor {
     // Light side colors
@@ -10,6 +10,6 @@ public enum UnoColor {
     // Dark side colors
     PINK, TEAL, PURPLE, ORANGE,
 
-    // Special Card
+    // Special Card colors
     WILD, NONE
 }

@@ -1,9 +1,7 @@
 import java.awt.Color;
-
 /**
  * View interface for Uno.
  * Defines how the model communicates visual/game state updates via UnoEvent.
- *
  * @author Ajan Balaganesh Danilo Bukvic Aydan Eng Aws Ali
  * @version 3.0
  */
@@ -36,7 +34,7 @@ public interface UnoView {
     /**
      * Maps an UnoColor enum to a Java AWT Color.
      * @param c The UnoColor.
-     * @return The corresponding AWT Color.
+     * @return The color.
      */
     Color mapCardColor(UnoColor c);
 }

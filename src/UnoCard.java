@@ -4,9 +4,11 @@
  * @version 3.0
  */
 public class UnoCard {
+    // Light
     private final UnoColor lightColor;
     private final UnoRank lightRank;
 
+    // Dark
     private final UnoColor darkColor;
     private final UnoRank darkRank;
 
@@ -42,6 +44,11 @@ public class UnoCard {
         return isDark ? darkRank : lightRank;
     }
 
+    /**
+     * Gets the rank based on the current side.
+     * @param isDark True for dark side, false for light.
+     * @return True if card rank is wild, False otherwise.
+     */
     public boolean isWild(boolean isDark) {
         UnoRank r = getRank(isDark);
         return r == UnoRank.WILD || r == UnoRank.WILD_DRAW_TWO || r == UnoRank.WILD_DRAW_COLOR;
@@ -60,7 +67,6 @@ public class UnoCard {
 
         if (isWild(isDark)) return true;
 
-        // Match color, rank, or if the top card matches my color
         return myColor == activeColor || myRank == top.getRank(isDark);
     }
 
@@ -73,6 +79,11 @@ public class UnoCard {
         return getColor(isDark) + "-" + getRank(isDark);
     }
 
+
+    /**
+     * Returns text representation of card (both sides).
+     * @return String description of both sides of card.
+     */
     @Override
     public String toString() {
         return toText(false) + " / " + toText(true);

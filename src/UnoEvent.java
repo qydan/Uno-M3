@@ -1,12 +1,9 @@
 import java.util.EventObject;
 import java.util.List;
-
 /**
  * Represents a snapshot of the Uno game state to be sent to the View.
- * Follows the Java Event Model by extending EventObject.
- *
  * @author Ajan Balaganesh Danilo Bukvic Aydan Eng Aws Ali
- * @version 2.0
+ * @version 3.0
  */
 public class UnoEvent extends EventObject {
     private final List<UnoCard> hand;
@@ -20,7 +17,6 @@ public class UnoEvent extends EventObject {
 
     /**
      * Constructs a new UnoEvent.
-     *
      * @param source            The object on which the Event initially occurred.
      * @param hand              The current player's hand.
      * @param topCardText       The string representation of the top discard card.
@@ -91,10 +87,18 @@ public class UnoEvent extends EventObject {
         return activeColor;
     }
 
+    /**
+     * Checks if this card/player is considered dark.
+     * @return True if dark, False otherwise.
+     */
     public boolean isDark() {
         return isDark;
     }
 
+    /**
+     * Checks if this player is controlled by AI.
+     * @return True if the player is an AI, False otherwise.
+     */
     public boolean isAIPlayer() {
         return isAIPlayer;
     }
