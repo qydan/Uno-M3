@@ -5,7 +5,7 @@ import java.awt.Color;
  * Defines how the model communicates visual/game state updates via UnoEvent.
  *
  * @author Ajan Balaganesh Danilo Bukvic Aydan Eng Aws Ali
- * @version 2.0
+ * @version 3.0
  */
 public interface UnoView {
 
@@ -38,13 +38,5 @@ public interface UnoView {
      * @param c The UnoColor.
      * @return The corresponding AWT Color.
      */
-    default Color mapCardColor(UnoColor c) {
-        return switch (c) {
-            case RED -> Color.RED;
-            case GREEN -> Color.GREEN;
-            case BLUE -> Color.BLUE;
-            case YELLOW -> Color.YELLOW;
-            default -> Color.GRAY;
-        };
-    }
+    Color mapCardColor(UnoColor c);
 }

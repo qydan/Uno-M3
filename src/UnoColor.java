@@ -4,5 +4,12 @@
  * @version 1.0
  */
 public enum UnoColor {
-    RED, GREEN, BLUE, YELLOW, WILD, NONE
+    // Light side colors
+    RED, GREEN, BLUE, YELLOW,
+
+    // Dark side colors
+    PINK, TEAL, PURPLE, ORANGE,
+
+    // Special Card
+    WILD, NONE
 }

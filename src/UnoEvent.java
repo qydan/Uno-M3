@@ -15,6 +15,8 @@ public class UnoEvent extends EventObject {
     private final String info;
     private final boolean mustPressNext;
     private final UnoColor activeColor;
+    private final boolean isDark;
+    private final boolean isAIPlayer;
 
     /**
      * Constructs a new UnoEvent.
@@ -29,7 +31,7 @@ public class UnoEvent extends EventObject {
      */
     public UnoEvent(Object source, List<UnoCard> hand, String topCardText,
                     String currentPlayerName, String info, boolean mustPressNext,
-                    UnoColor activeColor) {
+                    UnoColor activeColor, boolean isDark, boolean isAIPlayer) {
         super(source);
         this.hand = hand;
         this.topCardText = topCardText;
@@ -37,6 +39,8 @@ public class UnoEvent extends EventObject {
         this.info = info;
         this.mustPressNext = mustPressNext;
         this.activeColor = activeColor;
+        this.isDark = isDark;
+        this.isAIPlayer = isAIPlayer;
     }
 
     /**
@@ -73,7 +77,7 @@ public class UnoEvent extends EventObject {
 
     /**
      * Checks if the Next button should be active.
-     * @return true if waiting for next player, false otherwise.
+     * @return True if waiting for next player, False otherwise.
      */
     public boolean isMustPressNext() {
         return mustPressNext;
@@ -85,5 +89,13 @@ public class UnoEvent extends EventObject {
      */
     public UnoColor getActiveColor() {
         return activeColor;
+    }
+
+    public boolean isDark() {
+        return isDark;
+    }
+
+    public boolean isAIPlayer() {
+        return isAIPlayer;
     }
 }
