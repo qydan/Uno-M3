@@ -4,22 +4,22 @@
 
 <table>
   <tr>
-    <td align="center">
+    <td>
       <img src="https://github.com/qydan.png" width="100px" alt=""/><br />
       <b>Aydan Eng</b><br />
       <a href="https://github.com/qydan">GitHub</a>
     </td>
-    <td align="center">
+    <td >
       <img src="https://github.com/AjanzzSkool.png" width="100px" alt=""/><br />
       <b>Ajan Balaganesh</b><br />
       <a href="https://github.com/AjanzzSkool">GitHub</a>
     </td>
-<td align="center">
+<td>
       <img src="https://github.com/AwsAli05.png" width="100px" alt=""/><br />
       <b>Aws Ali</b><br />
       <a href="https://github.com/AwsAli05">GitHub</a>
     </td>
-<td align="center">
+<td>
       <img src="https://github.com/danilo-hire-me.png" width="100px" alt=""/><br />
       <b>Danilo Bukvic</b><br />
       <a href="https://github.com/danilo-hire-me">GitHub</a>
@@ -27,7 +27,7 @@
   </tr>
 </table>
 
-Uno Game created for the class project for the Carleton University SYSC3110 Fall 2025.
+Uno Flip Game created for the class project for the Carleton University SYSC3110 Fall 2025.
 
 ## Deliverables and Roadmap
 
@@ -67,6 +67,13 @@ Uno Game created for the class project for the Carleton University SYSC3110 Fall
 - Updated scoring rules for Uno Flip cards
 - AI Player system supporting 2–4 players, with selection between Human or AI
 - AI legal-move validation and basic strategy for selecting playable cards
+#### AI Strategy
+The AI Player implementation uses a priority-based strategy rather than random selection to provide a competitive experience. When it is the AI's turn, it evaluates its hand against the current top card and active side (Light/Dark):
+1.  **Win Condition:** If the AI has one card left and it matches, it plays it immediately.
+2.  **Aggression (Action Cards):** The AI prioritizes playing Action cards (Skip, Reverse, Draw Five, Flip, etc.) to disrupt the next player's turn.
+3.  **Standard Play:** If no action cards are valid, it plays a matching number or color card.
+4.  **Wild Cards:** Wild cards are saved for last resort to ensure the AI always has a playable option if colors change.
+5.  **Draw:** If no legal move is available, the AI draws a card.
 - JUnit tests for:
   - Uno Flip special cards
   - AI player behaviour and strategy
@@ -81,6 +88,8 @@ Uno Game created for the class project for the Carleton University SYSC3110 Fall
 - Modified game loop and turn-handling logic to incorporate AI players and new special card effects
 - Improved deck/discard logic to support flipping between sides
 - Updated documentation to match new system architecture and gameplay rules
+
+Uno Flip Rules and Scoring: https://www.unorules.com/uno-flip-rules/
 
 ### Milestone 2 (Version 2.0)
 
@@ -108,5 +117,13 @@ Uno Game created for the class project for the Carleton University SYSC3110 Fall
 - Sequence Diagram of UNO Game
 - Unit Test for various classes (Card, ConsoleView, Deck, Player, RulesEngine, ScoreBoard)
 
+## Known Issues
+- No known issues at this time.
+
 ## How To Run
-1. Run 'main.java' this will start a playable UNO Game and run it from start to end
+1. **From Source:** Run `Main.java` in your IDE. This will start a playable UNO Game.
+2. **From Executable JAR:**
+    - Locate the `Uno-M3.jar` file (typically found in the `out/artifacts` folder or provided release).
+    - Open a terminal or command prompt.
+    - Navigate to the directory containing the JAR file.
+    - Run the command: `java -jar Uno-M3.jar`
