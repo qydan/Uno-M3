@@ -22,7 +22,7 @@ public class UnoModel {
     /**
      * Constructor for UnoModel.
      * @param numPlayers Number of players (2-4).
-     * @param names      List of player names.
+     * @param names List of player names.
      */
     public UnoModel(int numPlayers, List<String> names, List<Boolean> isAI) {
         if (numPlayers < 2 || numPlayers > 4) {

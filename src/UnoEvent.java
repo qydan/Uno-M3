@@ -17,13 +17,13 @@ public class UnoEvent extends EventObject {
 
     /**
      * Constructs a new UnoEvent.
-     * @param source            The object on which the Event initially occurred.
-     * @param hand              The current player's hand.
-     * @param topCardText       The string representation of the top discard card.
+     * @param source The object on which the Event initially occurred.
+     * @param hand he current player's hand.
+     * @param topCardText The string representation of the top discard card.
      * @param currentPlayerName The name of the current player.
-     * @param info              Status message to display.
-     * @param mustPressNext     True if the player needs to end their turn.
-     * @param activeColor       The current active color (useful for UI backgrounds).
+     * @param info Status message to display.
+     * @param mustPressNext True if the player needs to end their turn.
+     * @param activeColor The current active color (useful for UI backgrounds).
      */
     public UnoEvent(Object source, List<UnoCard> hand, String topCardText,
                     String currentPlayerName, String info, boolean mustPressNext,
