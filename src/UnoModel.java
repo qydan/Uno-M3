@@ -232,6 +232,14 @@ public class UnoModel {
         notifyViews();
     }
 
+    /**
+     * Returns the number of cards remaining in the draw pile.
+     * Used for testing card drawing mechanics.
+     */
+    public int getDrawPileSize() {
+        return drawPile.size();
+    }
+
     private void handleCardEffect(UnoCard chosen, List<UnoCard> currentHand) {
         UnoRank r = chosen.getRank(isDark);
         String msg = " played " + chosen.toText(isDark);

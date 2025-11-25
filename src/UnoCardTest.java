@@ -1,6 +1,11 @@
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * Test class for UnoCard
+ * @author Ajan Balaganesh Danilo Bukvic Aydan Eng Aws Ali
+ * @version 3.0
+ */
 public class UnoCardTest {
 
     private UnoCard greenFive;
@@ -8,71 +13,87 @@ public class UnoCardTest {
     private UnoCard blueFive;
     private UnoCard wild;
 
-    // set up some  cards for testing
+    /**
+     * Initializes sample cards for testing.
+     */
     @Before
     public void setUp() {
-        greenFive = new UnoCard(UnoColor.GREEN, UnoRank.FIVE);
-        redSkip = new UnoCard(UnoColor.RED, UnoRank.SKIP);
-        blueFive = new UnoCard(UnoColor.BLUE, UnoRank.FIVE);
-        wild = new UnoCard(UnoColor.WILD, UnoRank.WILD);
+        greenFive = new UnoCard(UnoColor.GREEN, UnoRank.FIVE, UnoColor.TEAL, UnoRank.FIVE);
+        redSkip = new UnoCard(UnoColor.RED, UnoRank.SKIP, UnoColor.ORANGE, UnoRank.SKIP_EVERYONE);
+        blueFive = new UnoCard(UnoColor.BLUE, UnoRank.FIVE, UnoColor.PINK, UnoRank.FIVE);
+        wild = new UnoCard(UnoColor.WILD, UnoRank.WILD, UnoColor.WILD, UnoRank.WILD_DRAW_COLOR);
     }
 
+    /**
+     * Tests correct identification of Wild cards on both Light and Dark sides.
+     */
     @Test
     public void testWild() {
-        assertFalse(greenFive.isWild());
-        assertTrue(wild.isWild());
+        // Check Light side wild status
+        assertFalse(greenFive.isWild(false));
+        assertTrue(wild.isWild(false));
+        assertFalse(blueFive.isWild(false));
 
-        assertFalse(blueFive.isWild());
+        // Check Dark side wild status (Wild Draw Color is wild)
+        assertTrue(wild.isWild(true));
     }
 
-    // Making sure that we can play a card thats the same colour
+    /**
+     * Tests that a card matches another if they share the same rank.
+     */
     @Test
     public void testMatchSameColor() {
-        UnoCard top = new  UnoCard(UnoColor.GREEN, UnoRank.EIGHT);
-
-
+        UnoCard top = new UnoCard(UnoColor.GREEN, UnoRank.EIGHT, UnoColor.TEAL, UnoRank.EIGHT);
         UnoColor activeColor = UnoColor.GREEN;
 
-        assertTrue(greenFive.matches(top, activeColor));
+        // Match on Light side
+        assertTrue(greenFive.matches(top, activeColor, false));
     }
 
 
-    // Making sure we can play same rank
+    /**
+     * Tests that a card matches another if they share the same color.
+     */
     @Test
     public void testMatchSameRank() {
-
         UnoCard top = greenFive;
         UnoColor activeColor = UnoColor.BLUE;
-        assertTrue(blueFive.matches(top, activeColor));
+
+        // Blue Five matches Green Five (Same Rank)
+        assertTrue(blueFive.matches(top, activeColor, false));
     }
 
-    //wild should be able to be played whenever
-    @Test
+    /**
+     * Tests that a wild card matches any card.
+     */    @Test
     public void testMatchWildAlwaysMatches() {
         UnoCard top = greenFive;
-        assertTrue(wild.matches(top, UnoColor.GREEN));
-        assertTrue(wild.matches(top, UnoColor.NONE));
+        // Wild matches anything
+        assertTrue(wild.matches(top, UnoColor.GREEN, false));
     }
 
-    //shouldn't be able to play a card thats not the same colour or rank
-    @Test
+    /**
+     * tests a card does not match if both color and rank are different.
+     */    @Test
     public void testNoMatchDifferentColorAndRank() {
-
         UnoCard top = redSkip;
-
         UnoColor activeColor = UnoColor.GREEN;
 
-        assertFalse(blueFive.matches(top, activeColor));
+        // Blue Five does not match Red Skip
+        assertFalse(blueFive.matches(top, activeColor, false));
     }
 
-    //Making sure there is proper string representation
-    @Test
+    /**
+     * Tests the string representation of cards for both Light and Dark sides.
+     * */    @Test
     public void testToText() {
-        assertEquals("GREEN-FIVE", greenFive.toText());
-        assertEquals("BLUE-FIVE", blueFive.toText());
+        // Test Light Side Text
+        assertEquals("GREEN-FIVE", greenFive.toText(false));
+        assertEquals("BLUE-FIVE", blueFive.toText(false));
+
+        // Test Dark Side Text
+        assertEquals("TEAL-FIVE", greenFive.toText(true));
+        assertEquals("PINK-FIVE", blueFive.toText(true));
     }
-
-
-
 }
 

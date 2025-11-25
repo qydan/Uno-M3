@@ -2,68 +2,54 @@ import org.junit.Test;
 import org.junit.Before;
 import java.util.*;
 import static org.junit.Assert.*;
-
 /**
- * Comprehensive unit tests for UnoModel logic.
+ * Test class for UnoModel
+ * @author Ajan Balaganesh Danilo Bukvic Aydan Eng Aws Ali
+ * @version 3.0
  */
 public class UnoModelTest {
-
     private UnoModel model;
     private UnoViewStub view;
 
-    // Helper stub to capture events without GUI
-    static class UnoViewStub implements UnoView {
-        UnoEvent lastEvent;
-        @Override public void handleUpdate(UnoEvent e) { lastEvent = e; }
-        @Override public void handleEnd(String message) { }
-        @Override public UnoColor promptForWildColor() { return UnoColor.RED; }
-        @Override public void showInfo(String message) { }
-    }
-
+    /**
+     * Sets up the model and view before each test.
+     */
     @Before
     public void setUp() {
-        model = new UnoModel(2, Arrays.asList("Alice", "Bob"));
+        model = new UnoModel(2, Arrays.asList("Alice", "Bob"), Arrays.asList(false, false));
         view = new UnoViewStub();
         model.addView(view);
     }
 
+    /**
+     * Tests that the initial game state is correct.
+     */
     @Test
     public void testInitialState() {
         assertNotNull("View should receive initial update", view.lastEvent);
         assertEquals("Alice", view.lastEvent.getCurrentPlayerName());
         assertEquals(7, view.lastEvent.getHand().size());
+        assertFalse("Should start on Light side", view.lastEvent.isDark());
     }
 
-    @Test
-    public void testPlayValidCard() {
-        // Setup: Force top card to RED 5
-        model.setTopCard(new UnoCard(UnoColor.RED, UnoRank.FIVE));
-        // Give Alice a RED 6
-        List<UnoCard> hand = new ArrayList<>();
-        hand.add(new UnoCard(UnoColor.RED, UnoRank.SIX));
-        hand.add(new UnoCard(UnoColor.BLUE, UnoRank.NINE));
-        model.forceCurrentPlayerHand(hand);
-
-        // Play RED 6 (index 0)
-        model.play(0);
-
-        // Check that RED 6 is on top and hand size reduced
-        assertEquals("RED-SIX", model.getDiscardTop().toText());
-        assertEquals(1, view.lastEvent.getHand().size());
-        assertTrue("Must press next after playing", view.lastEvent.isMustPressNext());
-    }
-
+    /**
+     * Tests that playing an invalid card throws an exception.
+     */
     @Test(expected = IllegalStateException.class)
     public void testPlayInvalidCardThrowsException() {
-        model.setTopCard(new UnoCard(UnoColor.RED, UnoRank.FIVE));
-        // Hand has BLUE 9 only
-        List<UnoCard> hand = new ArrayList<>();
-        hand.add(new UnoCard(UnoColor.BLUE, UnoRank.NINE));
-        model.forceCurrentPlayerHand(hand);
+        model.setTopCard(new UnoCard(UnoColor.RED, UnoRank.FIVE, UnoColor.TEAL, UnoRank.FIVE));
 
-        model.play(0); // Should fail
+        // Bluw 9 only
+        List<UnoCard> hand = new ArrayList<>();
+        hand.add(new UnoCard(UnoColor.BLUE, UnoRank.NINE, UnoColor.PINK, UnoRank.NINE));
+        model.forceHand(0, hand);
+
+        model.play(0); // Should fail as BLUE doesn't match RED
     }
 
+    /**
+     * Tests that drawing a card increases hand size and sets mustPressNext flag.
+     */
     @Test
     public void testDrawCard() {
         int initialSize = view.lastEvent.getHand().size();
@@ -72,66 +58,112 @@ public class UnoModelTest {
         assertTrue("Must press next after drawing", view.lastEvent.isMustPressNext());
     }
 
+    /**
+     * Tests turn progression from one player to the next.
+     */
     @Test
     public void testTurnProgression() {
-        // Alice plays
-        model.setTopCard(new UnoCard(UnoColor.RED, UnoRank.FIVE));
+        // Top card is RED 5
+        model.setTopCard(new UnoCard(UnoColor.RED, UnoRank.FIVE, UnoColor.TEAL, UnoRank.FIVE));
+
         List<UnoCard> hand = new ArrayList<>();
-        hand.add(new UnoCard(UnoColor.RED, UnoRank.SIX));
-        model.forceCurrentPlayerHand(hand);
+        hand.add(new UnoCard(UnoColor.RED, UnoRank.SIX, UnoColor.TEAL, UnoRank.SIX));
+        // Extra card so Alice doesn't win immediately
+        hand.add(new UnoCard(UnoColor.BLUE, UnoRank.NINE, UnoColor.PINK, UnoRank.NINE));
 
+        model.forceHand(0, hand);
+
+        // Alice plays index 0 (RED 6)
         model.play(0);
-        model.nextPlayer();
 
-        // Should be Bob's turn
+        // Now she has 1 card left, so the game continues and waits for 'Next'
+        model.nextPlayer();
         assertEquals("Bob", view.lastEvent.getCurrentPlayerName());
     }
 
+    /**
+     * Tests that playing a valid card updates the top of discard and hand correctly.
+     */
     @Test
-    public void testSkipCardEffect() {
-        // 2 Player game: Skip skips Bob, goes back to Alice
-        model.setTopCard(new UnoCard(UnoColor.RED, UnoRank.FIVE));
+    public void testPlayValidCard() {
+        model.setTopCard(new UnoCard(UnoColor.RED, UnoRank.FIVE, UnoColor.TEAL, UnoRank.FIVE));
+
         List<UnoCard> hand = new ArrayList<>();
-        hand.add(new UnoCard(UnoColor.RED, UnoRank.SKIP));
-        model.forceCurrentPlayerHand(hand);
+        hand.add(new UnoCard(UnoColor.RED, UnoRank.SIX, UnoColor.TEAL, UnoRank.SIX));
+        model.forceHand(0, hand);
 
-        model.play(0); // Alice plays skip
+        model.play(0);
 
-        // Check info message
-        assertTrue(view.lastEvent.getInfo().contains("skipped"));
-
-        model.nextPlayer();
-        assertEquals("Alice", view.lastEvent.getCurrentPlayerName()); // Bob skipped
+        assertEquals("RED-SIX", model.getDiscardTop().toText(false));
+        assertEquals(0, view.lastEvent.getHand().size());
     }
 
+    /**
+     * Tests that playing a skip everyone card is  correctly.
+     */
     @Test
-    public void testDrawTwoEffect() {
-        model.setTopCard(new UnoCard(UnoColor.RED, UnoRank.FIVE));
-        List<UnoCard> hand = new ArrayList<>();
-        hand.add(new UnoCard(UnoColor.RED, UnoRank.DRAW_TWO));
-        model.forceCurrentPlayerHand(hand);
+    public void testSkipEveryoneEffect() {
+        // Alice gets a Skip Everyone card AND an extra card so she doesn't win immediately
+        UnoCard skipAll = new UnoCard(UnoColor.ORANGE, UnoRank.SKIP_EVERYONE, UnoColor.ORANGE, UnoRank.SKIP_EVERYONE);
+        UnoCard extra = new UnoCard(UnoColor.RED, UnoRank.ONE, UnoColor.TEAL, UnoRank.ONE);
 
-        model.play(0); // Alice plays Draw Two
+        model.forceHand(0, new ArrayList<>(List.of(skipAll, extra)));
+        model.setTopCard(new UnoCard(UnoColor.ORANGE, UnoRank.ONE, UnoColor.ORANGE, UnoRank.ONE));
+        model.play(0);
 
-        // Bob should be drawn 2 cards. We need to check Bob's hand size.
-        // Since we can't easily see Bob's hand via Alice's event, we check turn progression
+        // Must press next
+        assertTrue(view.lastEvent.isMustPressNext());
+
+        // Advance turn
         model.nextPlayer();
-        // Bob was skipped due to Draw Two rule in this implementation
+
+        // It should still be Alice's turn
         assertEquals("Alice", view.lastEvent.getCurrentPlayerName());
-
-        // (Advanced verification would require inspecting internal player list,
-        // but checking turn flow confirms effect triggered)
     }
 
+    /**
+     * Tests the logic for the Wild Draw Color card.
+     * Verifies that when a Wild Draw Color card is played, the next player draws cards
+     * from the deck until they find the chosen color, and their turn is skipped, returning to the original player.
+     */
     @Test
-    public void testWildCardPlay() {
-        List<UnoCard> hand = new ArrayList<>();
-        hand.add(new UnoCard(UnoColor.WILD, UnoRank.WILD));
-        model.forceCurrentPlayerHand(hand);
+    public void testWildDrawColorLogic() {
+        UnoCard wdc = new UnoCard(UnoColor.WILD, UnoRank.WILD_DRAW_COLOR, UnoColor.WILD, UnoRank.WILD_DRAW_COLOR);
+        UnoCard dummy = new UnoCard(UnoColor.RED, UnoRank.ONE, UnoColor.TEAL, UnoRank.ONE);
+        model.forceHand(0, new ArrayList<>(List.of(wdc, dummy)));
 
-        assertTrue(model.isCardWild(0));
-        model.playWild(0, UnoColor.BLUE);
+        model.setTopCard(new UnoCard(UnoColor.TEAL, UnoRank.ONE, UnoColor.TEAL, UnoRank.ONE));
 
-        assertEquals(UnoColor.BLUE, view.lastEvent.getActiveColor());
+        int initialDeck = model.getDrawPileSize();
+
+        model.playWild(0, UnoColor.RED);
+
+        model.nextPlayer();
+
+        assertTrue("Deck size should decrease", model.getDrawPileSize() < initialDeck);
+        assertEquals("Alice", view.lastEvent.getCurrentPlayerName());
+    }
+
+    /**
+     * Tests the winning condition and score calculation.
+     * Verifies that when a player plays their last card, the game correctly triggers the end-game
+     * sequence (handleEnd) and the message indicates that the player has won.
+     */
+    @Test
+    public void testWinningAndScoring() {
+        UnoCard winner = new UnoCard(UnoColor.RED, UnoRank.ONE, UnoColor.TEAL, UnoRank.ONE);
+        model.forceHand(0, new ArrayList<>(List.of(winner)));
+
+        UnoCard c1 = new UnoCard(UnoColor.WILD, UnoRank.WILD_DRAW_COLOR, UnoColor.WILD, UnoRank.WILD_DRAW_COLOR);
+        UnoCard c2 = new UnoCard(UnoColor.TEAL, UnoRank.DRAW_FIVE, UnoColor.TEAL, UnoRank.DRAW_FIVE);
+        model.forceHand(1, new ArrayList<>(List.of(c1, c2)));
+
+        model.setTopCard(new UnoCard(UnoColor.RED, UnoRank.TWO, UnoColor.TEAL, UnoRank.TWO));
+
+        model.play(0);
+
+        assertTrue("HandleEnd should be called", view.handleEndCalled);
+
+        assertTrue(view.lastInfo.contains("WON"));
     }
 }
