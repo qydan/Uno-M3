@@ -1,4 +1,6 @@
-# Uno Game For SYSC 3110 Project
+# Uno Game For SYSC 3110 Project Milestone 3
+
+
 
 ### Team
 
@@ -28,6 +30,36 @@
 </table>
 
 Uno Flip Game created for the class project for the Carleton University SYSC3110 Fall 2025.
+
+## Contributions
+
+**Group Members:**
+* Ajan Balaganesh
+* Danilo Bukvic
+* Aydan Eng
+* Aws Ali
+
+### Individual Breakdown
+
+* **Ajan Balaganesh:**
+    * Contributed to the core `UnoModel` logic, specifically managing turn progression and state updates.
+    * Assisted in implementing the `UnoView` interface and integrating it with the main frame logic.
+    * Wrote unit tests for `UnoCardTest` to verify card matching logic.
+
+* **Danilo Bukvic:**
+    * Implemented the **Uno Flip** mechanics, including the `isDark` state toggling and the dual-sided `UnoCard` logic.
+    * Developed the `UnoController` to handle user input and bridge the Model and View.
+    * Refined the Javadoc documentation across the project.
+
+* **Aydan Eng:**
+    * Implemented the **AI Player** logic in `UnoModel`, specifically the strategy for prioritizing action cards.
+    * Created the `UnoAiTest` suite to verify computer opponent behavior.
+    * Worked on the GUI layout in `UnoFrame` to ensure correct updates during game loops.
+
+* **Aws Ali:**
+    * Designed the `UnoEvent` class to ensure safe data transfer between Model and View.
+    * Implemented the specific card effects (Draw 5, Skip Everyone, Wild Draw Color) in the Model.
+    * Wrote `UnoControllerTest` and `UnoModelTest` to ensure robust error handling.
 
 ## Deliverables and Roadmap
 
@@ -67,13 +99,6 @@ Uno Flip Game created for the class project for the Carleton University SYSC3110
 - Updated scoring rules for Uno Flip cards
 - AI Player system supporting 2–4 players, with selection between Human or AI
 - AI legal-move validation and basic strategy for selecting playable cards
-#### AI Strategy
-The AI Player implementation uses a priority-based strategy rather than random selection to provide a competitive experience. When it is the AI's turn, it evaluates its hand against the current top card and active side (Light/Dark):
-1.  **Win Condition:** If the AI has one card left and it matches, it plays it immediately.
-2.  **Aggression (Action Cards):** The AI prioritizes playing Action cards (Skip, Reverse, Draw Five, Flip, etc.) to disrupt the next player's turn.
-3.  **Standard Play:** If no action cards are valid, it plays a matching number or color card.
-4.  **Wild Cards:** Wild cards are saved for last resort to ensure the AI always has a playable option if colors change.
-5.  **Draw:** If no legal move is available, the AI draws a card.
 - JUnit tests for:
   - Uno Flip special cards
   - AI player behaviour and strategy
@@ -82,6 +107,14 @@ The AI Player implementation uses a priority-based strategy rather than random s
     - Human player plays a Flip Card
     - AI Player selects and plays a move
 - README updates explaining AI strategy, special cards, and milestone-specific features
+
+#### AI Strategy
+The AI Player implementation uses a priority-based strategy rather than random selection to provide a competitive experience. When it is the AI's turn, it evaluates its hand against the current top card and active side (Light/Dark):
+1.  **Win Condition:** If the AI has one card left and it matches, it plays it immediately.
+2.  **Aggression (Action Cards):** The AI prioritizes playing Action cards (Skip, Reverse, Draw Five, Flip, etc.) to disrupt the next player's turn.
+3.  **Standard Play:** If no action cards are valid, it plays a matching number or color card.
+4.  **Wild Cards:** Wild cards are saved for last resort to ensure the AI always has a playable option if colors change.
+5.  **Draw:** If no legal move is available, the AI draws a card.
 
 #### Changed
 - Updated internal data structures to support Light/Dark card states and Flip behavior
